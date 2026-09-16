@@ -15,25 +15,17 @@ The project uses NFL player-tracking data together with play-level metadata and 
 Place the downloaded Big Data Bowl files in:
 
 ```text
-data/raw/bdb2025/nfl-big-data-bowl-2023/
+data/raw/nfl-big-data-bowl-2023/
 ```
 
-Initial development requires:
+The published eight-week analysis requires:
 
 ```text
 games.csv
 plays.csv
 players.csv
 pffScoutingData.csv
-week1.csv
-```
-
-Additional weekly tracking files can be added once the Week 1 pipeline has been validated:
-
-```text
-week2.csv
-week3.csv
-...
+week1.csv through week8.csv
 ```
 
 ## Directory Structure
@@ -41,8 +33,7 @@ week3.csv
 ```text
 data/
 ├── raw/
-│   └── bdb2025/
-│       └── nfl-big-data-bowl-2023/
+│   └── nfl-big-data-bowl-2023/
 │       ├── games.csv
 │       ├── plays.csv
 │       ├── players.csv
@@ -78,6 +69,10 @@ These files can always be regenerated from the raw data.
 ### `processed/`
 
 Analysis-ready datasets.
+
+The schemas below are future-facing design notes. The current MVP writes
+fixed-horizon geometry and EPA tables to the local `interim/` directory; see
+the top-level README for the published analysis scope.
 
 The project is expected to eventually produce two main processed tables:
 

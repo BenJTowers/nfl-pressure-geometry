@@ -16,7 +16,6 @@ def default_data_dir() -> Path:
         Path(__file__).resolve().parents[2]
         / "data"
         / "raw"
-        / "bdb2025"
         / "nfl-big-data-bowl-2023"
     )
 

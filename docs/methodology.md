@@ -60,9 +60,10 @@ Pass rushers will be identified by `pff_role == "Pass Rush"`. A successful pass 
 * `pff_hit`
 * `pff_sack`
 
-These labels identify rush events to analyze; they do not supply the frame at which pressure began.
-
-The project will derive that frame from tracking data. It will not claim to recreate PFF's labeling process.
+These labels identify rush events to analyze; they do not supply the frame at
+which pressure began. The current MVP does not infer a pressure-onset frame.
+Instead, it measures each PFF-positive rusher at a common fixed horizon before
+the terminal event. It does not claim to recreate PFF's labeling process.
 
 ---
 
@@ -87,7 +88,7 @@ For each PFF-positive rusher:
 
 The primary results will be checked at nearby horizons such as 0.3 and 0.7 seconds before the terminal event. If directional conclusions change substantially, that sensitivity will be reported.
 
-### Secondary threat timing research
+### Future extension: threat timing and onset calibration
 
 The following threat metrics remain useful secondary features and may later support severity, multi-rusher timing, or an exploratory onset analysis. They are not required to define the primary geometry frame.
 
@@ -251,7 +252,14 @@ This allows pressures occurring at different physical distances from the quarter
 
 ---
 
-## 7. Closing Speed
+## Potential Extensions / Future Methodology
+
+The material in this section is a research backlog, not part of the published
+MVP results. The current analysis uses the fixed 0.5-second pre-terminal
+anchor described above; it does not use inferred pressure onset, STRAIN,
+synchronized pressure, approach angle, or rush-strategy analysis.
+
+### 7. Closing Speed
 
 Pressure threat depends not only on where a defender is but also on how quickly the defender is approaching.
 
@@ -276,7 +284,7 @@ This feature may provide a more meaningful representation of threat than raw def
 
 ---
 
-## 8. Approach Angle
+### 8. Approach Angle
 
 Two distinct angular measurements may be useful.
 
@@ -294,7 +302,7 @@ A defender may therefore be located on one side of the quarterback while moving 
 
 ---
 
-## 9. Multiple Pressure
+### 9. Multiple Pressure
 
 A play may contain multiple rushers credited by PFF with a hurry, hit, or sack.
 
@@ -313,7 +321,7 @@ The analysis should therefore distinguish:
 
 ---
 
-## 10. Synchronized Pressure
+### 10. Synchronized Pressure
 
 A synchronized-pressure group will initially be defined relative to the first pressure time.
 
@@ -355,7 +363,7 @@ If conclusions change dramatically depending on the threshold, that uncertainty 
 
 ---
 
-## 11. Angular Separation
+### 11. Angular Separation
 
 For two pressure angles:
 
@@ -393,7 +401,7 @@ The final measure should be chosen based on interpretability.
 
 ---
 
-## 12. Circular Statistics
+### 12. Circular Statistics
 
 Pressure angle must not be treated as an ordinary linear variable.
 
@@ -415,7 +423,7 @@ The visualization method should avoid creating an artificial discontinuity at th
 
 ---
 
-## 13. Rush Count
+### 13. Rush Count
 
 Pass rushers will be counted at the play level using `pff_role`.
 
@@ -441,7 +449,7 @@ is preferable when classification is based only on rusher count.
 
 ---
 
-## 14. Rush Strategy vs. Pressure Quality
+### 14. Rush Strategy vs. Pressure Quality
 
 Two analyses must remain separate.
 
@@ -475,7 +483,7 @@ Analyzing only successful pressures when evaluating rush strategy would create s
 
 ---
 
-## 15. Play Outcomes
+### 15. Play Outcomes
 
 Potential outcome variables include:
 
@@ -501,7 +509,7 @@ EPA may be joined from nflverse or another public source once the geometry pipel
 
 ---
 
-## 16. Quarterback Movement
+### 16. Quarterback Movement
 
 A potential extension is to measure how the quarterback responds to incoming pressure.
 
@@ -521,7 +529,12 @@ This should remain secondary until the core pressure model is working.
 
 ---
 
-## 17. Validation
+## Current MVP Validation and Reporting
+
+The sections below describe the implemented fixed-horizon analysis and the
+documentation needed to reproduce or interpret its preliminary results.
+
+### 17. Validation
 
 Derived tracking metrics must be visually validated before aggregation.
 
@@ -550,35 +563,41 @@ No league-wide heat map should be trusted until these examples behave correctly.
 
 ---
 
-## 18. Initial Development Scope
+### 18. Published Analysis Scope
 
-Initial development uses only:
+The published analysis uses the first eight tracking weeks from the 2021 NFL
+season:
 
 ```text
-week1.csv
+week1.csv through week8.csv
 ```
 
-The first target output is a table containing, for every validated Week 1 successful pass-rush event:
+The core output contains one row for every PFF-positive rusher on a
+traditional dropback at the fixed 0.5-second anchor:
 
 ```text
 game_id
 play_id
 qb_id
 rusher_id
-pressure_time
-pressure_frame
+geometry_horizon_seconds
 pressure_label
 relative_x
 relative_y
 pressure_angle
 pressure_distance
+epa
+play_equal_weight
 ```
 
-Only after the pressure-onset rule and this table have been validated should the pipeline be expanded across additional weeks.
+The pipeline has been run across Weeks 1–8. Its headline figures use 18
+directional sectors, play-equal EPA weighting, and play-level bootstrap
+intervals. Pressure-onset timing remains future work rather than a
+prerequisite for these results.
 
 ---
 
-## 19. Statistical Analysis
+### 19. Statistical Analysis
 
 The project is primarily explanatory rather than predictive.
 
@@ -606,7 +625,7 @@ Observed associations should not automatically be described as causal.
 
 ---
 
-## 20. Reproducibility
+### 20. Reproducibility
 
 Reusable transformations should live in:
 
@@ -623,9 +642,9 @@ load.py
 plays.py
 coordinates.py
 pressure.py
-outcomes.py
 epa.py
 plotting.py
+summaries.py
 ```
 
 Critical calculations such as coordinate normalization and circular angle differences should have automated tests in:
@@ -646,7 +665,7 @@ The goal is for another user to be able to reproduce the analysis from the docum
 
 ---
 
-## 21. Exploratory Directional Heat Maps
+### 21. Exploratory Directional Heat Maps
 
 The first circular visualization uses PFF's supplied outcome labels at the
 fixed 0.5-second pre-terminal anchor. It separates two quantities:
