@@ -6,16 +6,16 @@ Raw NFL Big Data Bowl data is **not included in this repository** and should nev
 
 ## Data Source
 
-The primary dataset is the **NFL Big Data Bowl 2025** dataset distributed through Kaggle.
+The primary dataset is the **NFL Big Data Bowl 2023** dataset distributed through Kaggle. It contains tracking data from the 2021 NFL season.
 
-The project uses NFL player-tracking data together with play-level and player-play metadata to investigate the geometry of quarterback pressure.
+The project uses NFL player-tracking data together with play-level metadata and PFF scouting labels to investigate the geometry of quarterback pressure.
 
 ## Required Files
 
 Place the downloaded Big Data Bowl files in:
 
 ```text
-data/raw/bdb2025/
+data/raw/bdb2025/nfl-big-data-bowl-2023/
 ```
 
 Initial development requires:
@@ -24,15 +24,15 @@ Initial development requires:
 games.csv
 plays.csv
 players.csv
-player_play.csv
-tracking_week_1.csv
+pffScoutingData.csv
+week1.csv
 ```
 
 Additional weekly tracking files can be added once the Week 1 pipeline has been validated:
 
 ```text
-tracking_week_2.csv
-tracking_week_3.csv
+week2.csv
+week3.csv
 ...
 ```
 
@@ -42,11 +42,12 @@ tracking_week_3.csv
 data/
 ├── raw/
 │   └── bdb2025/
+│       └── nfl-big-data-bowl-2023/
 │       ├── games.csv
 │       ├── plays.csv
 │       ├── players.csv
-│       ├── player_play.csv
-│       └── tracking_week_*.csv
+│       ├── pffScoutingData.csv
+│       └── week*.csv
 │
 ├── interim/
 │
@@ -82,7 +83,7 @@ The project is expected to eventually produce two main processed tables:
 
 #### Pressure-event table
 
-One row per defender-generated pressure event.
+One row per PFF-labeled successful pass-rush event (hurry, hit, or sack).
 
 Expected fields include:
 
@@ -94,6 +95,7 @@ rusher_id
 
 pressure_time
 pressure_frame
+pressure_label
 
 qb_x
 qb_y
@@ -110,7 +112,7 @@ rusher_speed
 closing_speed
 approach_angle
 
-num_initial_rushers
+num_pass_rushers
 ```
 
 #### Pressure-play table
@@ -124,7 +126,7 @@ game_id
 play_id
 qb_id
 
-num_initial_rushers
+num_pass_rushers
 
 pressure_generated
 num_pressure_rushers
@@ -167,10 +169,10 @@ plays.csv
 players.csv
     nflId
 
-player_play.csv
+pffScoutingData.csv
     gameId + playId + nflId
 
-tracking_week_*.csv
+week*.csv
     gameId + playId + nflId + frameId
 ```
 

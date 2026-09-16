@@ -8,11 +8,11 @@
 
 Traditional pass-rush statistics often reduce quarterback pressure to binary or categorical outcomes such as pressure, sack, or pressure attributed to a particular offensive-line position.
 
-NFL tracking data makes it possible to examine pressure spatially.
+NFL player-tracking data, combined with PFF pass-rush outcomes, makes it possible to examine pressure spatially.
 
 Rather than describing pressure only as coming from the left, middle, or right, this project will represent each pressure using its actual position and movement relative to the quarterback.
 
-The objective is to determine whether the **geometry of pressure** provides useful information about how disruptive a pass rush is.
+The objective is to derive an interpretable pressure-onset measure and determine whether the **geometry of pressure** provides useful information about how disruptive a pass rush is.
 
 ## Primary Research Question
 
@@ -79,9 +79,9 @@ Rather than beginning with a broad "Do blitzes work?" question, the initial anal
 For example:
 
 ```text
-4 initial rushers
+4 pass rushers
 vs.
-5+ initial rushers
+5+ pass rushers
 ```
 
 Two separate questions must be preserved:
@@ -110,7 +110,7 @@ This distinction prevents the analysis from conditioning only on successful pres
 
 ## Pressure Representation
 
-Each individual pressure event will eventually be represented approximately as:
+Each PFF-labeled successful pass-rush event will eventually be represented approximately as:
 
 $$
 P_i =
@@ -120,7 +120,7 @@ $$
 where:
 
 * \(\theta_i\) = pressure source angle relative to the quarterback
-* \(t_i\) = time to pressure
+* \(t_i\) = derived pressure-onset time
 * \(d_i\) = rusher-to-quarterback distance
 * \(v_i\) = closing speed or related velocity measurement
 
@@ -161,18 +161,20 @@ Complex machine-learning methods should only be introduced if they directly help
 
 ### Milestone 1 — Data validation
 
-Using Week 1 only:
+Using `week1.csv` only:
 
 * load required datasets
-* identify pressure-causing defenders
+* identify pass rushers using `pff_role`
+* identify successful rushers using `pff_hurry`, `pff_hit`, and `pff_sack`
 * identify quarterbacks
-* identify pressure timing
-* locate QB and rusher at the relevant frame
+* identify the terminal pass-release or sack frame
+* locate QB and successful rusher at a common pre-terminal reference frame
+* assess nearby reference horizons as a sensitivity check
 * normalize field direction
 * compute QB-relative coordinates
 * calculate pressure angle
 
-**Deliverable:** validated Week 1 pressure-event table.
+**Deliverable:** validated Week 1 successful-rush event table, including a documented pre-terminal geometry anchor.
 
 ### Milestone 2 — Visual validation
 

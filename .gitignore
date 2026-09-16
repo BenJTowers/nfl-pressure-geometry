@@ -3,6 +3,20 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# Project data: source downloads and generated datasets stay local.
+# Keep data/README.md tracked as the reproducibility guide.
+data/raw/
+data/interim/
+data/processed/
+
+# Keep only the three documented, reproducible figures under version control.
+# Validation plots and superseded exploratory charts can always be regenerated.
+figures/validation/
+figures/final/*
+!figures/final/2021_weeks1_8_pressure_direction_offensive_epa.png
+!figures/final/2021_weeks1_8_pressure_direction_outcome_adjusted_epa.png
+!figures/final/2021_weeks1_8_pure_hurry_direction_offensive_epa.png
+
 # C extensions
 *.so
 
